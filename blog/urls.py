@@ -20,6 +20,6 @@ from python_blog.views import main
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', main),
+    path('<str:name>/', main),
 
 ]
