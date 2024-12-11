@@ -11,14 +11,15 @@ CATEGORIES = [
 ]
 
 def main(request):
-    catalog_categories_url = reverse('blog:categories')
-    catalog_tags_url = reverse('blog:tags')
+    return render(request, 'main.html')
+    # catalog_categories_url = reverse('blog:categories')
+    # catalog_tags_url = reverse('blog:tags')
 
-    return HttpResponse(f"""
-        <h1>Главная страница</h1>
-        <p><a href="{catalog_categories_url}">Каталог категорий</a></p>
-        <p><a href="{catalog_tags_url}">Каталог тегов</a></p>
-    """)
+    # return HttpResponse(f"""
+    #     <h1>Главная страница</h1>
+    #     <p><a href="{catalog_categories_url}">Каталог категорий</a></p>
+    #     <p><a href="{catalog_tags_url}">Каталог тегов</a></p>
+    # """)
 
 
 def catalog_posts(request):
