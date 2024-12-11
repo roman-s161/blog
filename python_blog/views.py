@@ -11,7 +11,13 @@ CATEGORIES = [
 ]
 
 def main(request):
-    return render(request, 'main.html')
+    context: dict[str, str ] = {
+        "title": "Главная", 
+        "text": "Главная страница",
+        "user_status": "admin",
+    }
+    return render(request, 'python_blog/main.html', context)
+
     # catalog_categories_url = reverse('blog:categories')
     # catalog_tags_url = reverse('blog:tags')
 
@@ -48,11 +54,14 @@ def category_detail(request, category_slug):
         name = category['name']
     else:
         name = category_slug
+
+    context: dict[str, str] = {
+        "title": f"Категория: {name}",
+        "text": f"Текст категория: {name}"
+    }
+    return render(request, 'python_blog/category_detail.html', context)
         
-    return HttpResponse(f"""
-        <h1>Категория: {name}</h1>
-        <p><a href="{reverse('blog:categories')}">Назад к категориям</a></p>
-    """)
+   
 
 def catalog_tags(request):
     return HttpResponse('Каталог тегов')
