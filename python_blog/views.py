@@ -39,12 +39,14 @@ def catalog_categories(request):
     for category in CATEGORIES:
         url = reverse('blog:category_detail', args=[category['slug']])
         links.append(f'<p><a href="{url}">{category["name"]}</a></p>')
+
+        context = {
+            "title": "Категории",
+            "text": "Текст страницы категорий",
+            "categories": CATEGORIES,
+        }   
+        return render(request, 'python_blog/catalog_categories.html', context)
     
-    return HttpResponse(f"""
-        <h1>Каталог категорий</h1>
-        {''.join(links)}
-        <p><a href="{reverse('blog:posts')}">К списку постов</a></p>
-    """)
 
 def category_detail(request, category_slug):
 
