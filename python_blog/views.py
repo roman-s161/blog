@@ -2,6 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
 
+MENU_ITEMS = [
+    {"title": "Главная", "url_name": "main"},
+    {"title": "Все посты", "url_name": "blog:posts"},
+    {"title": "Категории", "url_name": "blog:categories"},
+    {"title": "Теги", "url_name": "blog:tags"},
+]
+
 CATEGORIES = [
     {'slug': 'python', 'name': 'Python'},
     {'slug': 'django', 'name': 'Django'},
@@ -15,6 +22,7 @@ def main(request):
         "title": "Главная", 
         "text": "Главная страница",
         "user_status": "admin",
+        "menu_items": MENU_ITEMS,
     }
     return render(request, 'python_blog/main.html', context)
 
