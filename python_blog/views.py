@@ -179,7 +179,13 @@ def about(request):
 
 
 def catalog_posts(request):
-    return HttpResponse('Каталог постов')
+    context: dict[str, str ] = {
+        "title": "Каталог постов",
+        "text": "Текст страницы каталога постов",
+        "menu_items": MENU_ITEMS,
+        "dataset": dataset,
+    }
+    return render(request, 'python_blog/catalog_posts.html', context)
 
 # def post_detail(request, post_slug):
 #     return HttpResponse(f'Страница поста {post_slug}')
