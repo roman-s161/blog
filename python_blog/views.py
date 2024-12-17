@@ -4,6 +4,7 @@ from django.urls import reverse
 
 MENU_ITEMS = [
     {"title": "Главная", "url_name": "main"},
+    {"title": "О нас", "url_name": "about"},
     {"title": "Все посты", "url_name": "blog:posts"},
     {"title": "Категории", "url_name": "blog:categories"},
     {"title": "Теги", "url_name": "blog:tags"},
@@ -158,6 +159,15 @@ def main(request):
     }
     return render(request, 'main.html', context)
 
+def about(request):
+    context: dict[str, str ] = {
+        "title": "О нас",
+        "text": "OOO Albatross",
+        "menu_items": MENU_ITEMS,
+        
+    }
+    return render(request, 'about.html', context)
+
     # catalog_categories_url = reverse('blog:categories')
     # catalog_tags_url = reverse('blog:tags')
 
@@ -171,8 +181,10 @@ def main(request):
 def catalog_posts(request):
     return HttpResponse('Каталог постов')
 
-def post_detail(request, post_slug):
-    return HttpResponse(f'Страница поста {post_slug}')
+# def post_detail(request, post_slug):
+#     return HttpResponse(f'Страница поста {post_slug}')
+def post_detail(request):
+    return render(request, 'python_blog/post_detail.html')
 
 def catalog_categories(request):
     links = []
@@ -184,6 +196,7 @@ def catalog_categories(request):
             "title": "Категории",
             "text": "Текст страницы категорий",
             "categories": CATEGORIES,
+            "menu_items": MENU_ITEMS,
         }   
         return render(request, 'python_blog/catalog_categories.html', context)
     
