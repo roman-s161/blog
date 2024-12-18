@@ -3,9 +3,8 @@
     {% block title%}{{title}}{% endblock title%}
 
 
-    {%block content%}
+    {% block content %}
 
-            
     <h1>{{ title }}</h1>
     <p>{{ text }}</p>
     <hr>
@@ -15,11 +14,10 @@
     <p>Это категория: {{ category.name }}</p>
     <p>Слаг: {{ category.slug }}</p>
     {% comment %} Так можно но не нужно {% endcomment %}
-    {% comment %} <a href="{{ category.slug }}">{{ category.name }}</a> {% endcomment %}
+    <a href="{{ category.slug }}">{{ category.name }}</a>
     {% comment %} А так нужно. Это шаблонный тег URL который найдет маршрут по псевдониму {% endcomment %}
     <a href="{% url "blog:category_detail" category.slug  %}">{{ category.name }}</a>
     <hr>
     {% endfor %}
-    <a href="{% url 'main' %}">На главную</a>
-    {% endblock content %}
+    {% endblock %}
 

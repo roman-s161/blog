@@ -2,13 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
 
-MENU_ITEMS = [
-    {"title": "Главная", "url_name": "main"},
-    {"title": "О нас", "url_name": "about"},
-    {"title": "Все посты", "url_name": "blog:posts"},
-    {"title": "Категории", "url_name": "blog:categories"},
-    {"title": "Теги", "url_name": "blog:tags"},
-]
+
 
 CATEGORIES = [
     {'slug': 'python', 'name': 'Python'},
@@ -155,7 +149,7 @@ def main(request):
         "title": "Главная", 
         "text": "Главная страница",
         "user_status": "admin",
-        "menu_items": MENU_ITEMS,
+        "active_page": "main",
     }
     return render(request, 'main.html', context)
 
@@ -163,7 +157,7 @@ def about(request):
     context: dict[str, str ] = {
         "title": "О нас",
         "text": "OOO Albatross",
-        "menu_items": MENU_ITEMS,
+        "active_page": "about",
         
     }
     return render(request, 'about.html', context)
@@ -182,7 +176,7 @@ def catalog_posts(request):
     context: dict[str, str ] = {
         "title": "Каталог постов",
         "text": "Текст страницы каталога постов",
-        "menu_items": MENU_ITEMS,
+        "active_page": "blog:posts",
         "dataset": dataset,
     }
     return render(request, 'python_blog/catalog_posts.html', context)
@@ -202,7 +196,7 @@ def catalog_categories(request):
             "title": "Категории",
             "text": "Текст страницы категорий",
             "categories": CATEGORIES,
-            "menu_items": MENU_ITEMS,
+            "active_page": "blog:categories",
         }   
         return render(request, 'python_blog/catalog_categories.html', context)
     
