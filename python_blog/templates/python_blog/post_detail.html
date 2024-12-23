@@ -13,7 +13,7 @@
             <h1>{{ post.title }}</h1>
             <div class="mb-3">
                 {% for tag in post.hashtags %}
-                    <span class="badge bg-primary me-1">#{{ tag }}</span>
+                    <span class="badge bg-danger me-1">#{{ tag }}</span>
                 {% endfor %}
             </div>
         </div>
@@ -53,7 +53,7 @@
     <!-- Кнопка возврата -->
     <div class="row mt-4">
         <div class="col-12">
-            <a href="{% url 'blog:posts' %}" class="btn btn-outline-primary">
+            <a href="{% url 'blog:posts' %}" class="btn btn-outline-danger">
                 <i class="bi bi-arrow-left"></i> Вернуться к списку постов
             </a>
         </div>

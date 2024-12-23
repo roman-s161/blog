@@ -1,18 +1,43 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
-from .blog_data import dataset
+from django.utils.text import slugify
+
+from .blog_data import dataset, CATEGORIES
 
 
 
-CATEGORIES = [
-    {'slug': 'python', 'name': 'Python'},
-    {'slug': 'django', 'name': 'Django'},
-    {'slug': 'postgresql', 'name': 'PostgreSQL'},
-    {'slug': 'docker', 'name': 'Docker'},
-    {'slug': 'linux', 'name': 'Linux'},
-]
 
+
+def catalog_tags(request):
+    unique_tags = set()
+    for post in dataset:
+        unique_tags.update(post['hashtags'])
+
+    # global TAGS  # Объявляем TAGS глобальной
+    TAGS = [{'name': tag, 'slug': slugify(tag), 'posts': [p for p in dataset if tag in p['hashtags']]} for tag in unique_tags]
+
+    context = {
+        "title": "Теги",
+        "text": "Список всех тегов",
+        "tags": TAGS,
+        "active_page": "blog:tags",
+    }
+    return render(request, 'python_blog/catalog_tags.html', context)
+
+def tag_detail(request, tag_slug):
+    tag = next((tag for tag in TAGS if tag['slug'] == tag_slug), None)  # Используем next с значением по умолчанию
+
+    if tag:
+        name = tag['name']
+    else:
+        name = tag_slug
+
+    context = {
+        "title": f"Тег: {name}",
+        "text": f"Посты с тегом: {name}",
+    }
+    return render(request, 'python_blog/tag_detail.html', context)
 
 
 def main(request):
@@ -101,8 +126,8 @@ def category_detail(request, category_slug):
         
    
 
-def catalog_tags(request):
-    return HttpResponse('Каталог тегов')
+# def catalog_tags(request):
+#     return HttpResponse('Каталог тегов')
 
-def tag_detail(request, tag_slug):
-    return HttpResponse(f'Страница тега {tag_slug}')
+# def tag_detail(request, tag_slug):
+#     return HttpResponse(f'Страница тега {tag_slug}')

@@ -129,3 +129,12 @@ dataset = [
         ]
     }
 ]
+
+CATEGORIES = [
+    {'slug': 'python', 'name': 'Python'},
+    {'slug': 'django', 'name': 'Django'},
+    {'slug': 'postgresql', 'name': 'PostgreSQL'},
+    {'slug': 'docker', 'name': 'Docker'},
+    {'slug': 'linux', 'name': 'Linux'},
+]
+
