@@ -1,19 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Детали категории</title>
-</head>
-<body>
-    <h1>{{title}}</h1>
-    <p>{{text}}</p>
+{% extends "base.html" %}
+{% block content %}
 
-    {% comment %} Это комментарий Джанго{% endcomment %}
+{% comment %} 
+Выводим поля модели category
+- name
+- slug
 
-    <p><a href="{% url 'blog:categories' %}">Каталог категорий</a></p>
-    <p><a href="{% url 'blog:tags' %}">Каталог тегов</a></p>
-    <a href="{% url 'main' %}">На главную</a>
+{% endcomment %}
 
-</body>
-</html>
+<h1>{{ category.name }}</h1>
+
+<p>Слаг: {{ category.slug }}</p>
+
+{% endblock %}

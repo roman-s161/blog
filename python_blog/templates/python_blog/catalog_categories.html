@@ -1,9 +1,5 @@
 {% extends "base.html" %}
-
-    {% block title%}{{title}}{% endblock title%}
-
-
-    {% block content %}
+{% block content %}
 
     <h1>{{ title }}</h1>
     <p>{{ text }}</p>
@@ -17,7 +13,10 @@
     <a href="{{ category.slug }}">{{ category.name }}</a>
     {% comment %} А так нужно. Это шаблонный тег URL который найдет маршрут по псевдониму {% endcomment %}
     <a href="{% url "blog:category_detail" category.slug  %}">{{ category.name }}</a>
+    {% comment %} Пример ссылки с get_absolute_url {% endcomment %}
+    <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
     <hr>
+    <h2>Посты этой категории</h2>
+    
     {% endfor %}
     {% endblock %}
-
