@@ -25,8 +25,8 @@ class Post(models.Model):
         default=None,  # По умолчанию значение NULL
         verbose_name="Категория",
     )
-    tags = models.JSONField(null=True, blank=True, default=list, verbose_name="Теги") # default=list - по умолчанию пустой список
-
+    tags = models.ManyToManyField("Tag", related_name="posts", verbose_name="Теги")
+    
     def __str__(self):
         return self.title
     
@@ -42,6 +42,25 @@ class Post(models.Model):
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
 
+class Tag(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Название")
+    slug = models.SlugField(max_length=250, unique=True, verbose_name="Слаг")
+    
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse("blog:tag_detail", args=[self.slug])
+    
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(unidecode(self.name))
+        super().save(*args, **kwargs)
+    
+    class Meta:
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги"
+        ordering = ["name"]
 
 class Category(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название")

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Post
+from .models import Category, Post, Tag
 # Регистрация 2 способами
 """
 1. Регистрация с использованием функции register
@@ -17,5 +17,11 @@ class PostAdmin(admin.ModelAdmin):
     # Сделаем так, чтобы slug отображался но нельзя было редактировать
     readonly_fields = ["slug"]
 
+class TagAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = ["name", "slug"]
+    readonly_fields = ["slug"]
+
 
 admin.site.register(Post, PostAdmin)
+admin.site.register(Tag, TagAdmin)
