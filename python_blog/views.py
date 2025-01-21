@@ -3,8 +3,25 @@ from django.http import HttpResponse
 from django.urls import reverse
 # from .blog_data import dataset
 from .models import Post, Category, Tag
-from django.db.models import Count
+from django.db.models import Count, Q
+from django.contrib.messages import constants as messages
+from django.contrib import messages
 
+CATEGORIES = [
+    {"slug": "python", "name": "Python"},
+    {"slug": "django", "name": "Django"},
+    {"slug": "postgresql", "name": "PostgreSQL"},
+    {"slug": "docker", "name": "Docker"},
+    {"slug": "linux", "name": "Linux"},
+]
+
+MESSAGE_TAGS = {
+    messages.DEBUG: "primary",
+    messages.INFO: "info",
+    messages.SUCCESS: "success",
+    messages.WARNING: "warning",
+    messages.ERROR: "danger",
+}
 
 def main(request):
     catalog_categories_url = reverse("blog:categories")
@@ -26,37 +43,68 @@ def about(request):
     return render(request, "about.html", context)
 
 def catalog_posts(request):
-    # Получаем все опубликованные посты из базы данных
+    # Базовый QuerySet с оптимизацией запросов
     posts = Post.objects.select_related('category', 'author').prefetch_related('tags').all()
+    
+    # Получаем строку поиска
+    search_query = request.GET.get('search_query', '')
+    
+    if search_query:
+        # Создаем пустой Q объект
+        q_object = Q()
+        
+        # Добавляем условия поиска если включены соответствующие чекбоксы
+        if request.GET.get('search_content') == '1':
+            q_object |= Q(content__icontains=search_query)
+            
+        if request.GET.get('search_title') == '1':
+            q_object |= Q(title__icontains=search_query)
+            
+        if request.GET.get('search_tags') == '1':
+            q_object |= Q(tags__name__icontains=search_query)
+            
+        if request.GET.get('search_category') == '1':
+            q_object |= Q(category__name__icontains=search_query)
+            
+        if request.GET.get('search_slug') == '1':
+            q_object |= Q(slug__icontains=search_query)
+        
+        # Применяем фильтрацию если есть хотя бы одно условие
+        if q_object:
+            posts = posts.filter(q_object).distinct()
+    
+    # Сортировка результатов
+    sort_by = request.GET.get('sort_by', 'created_date')
+    
+    if sort_by == 'view_count':
+        posts = posts.order_by('-views')
+    elif sort_by == 'update_date':
+        posts = posts.order_by('-updated_at')
+    else:
+        posts = posts.order_by('-created_at')
     
     context = {
         'title': 'Блог',
-        'posts': posts
+        'posts': posts,
     }
     
     return render(request, 'python_blog/blog.html', context)
 # def catalog_posts(request):
-#     # Получаем все опубликованные посты
-#     posts = [post for post in dataset if post['is_published']]
+   
+#     posts = Post.objects.select_related('category', 'author').prefetch_related('tags').all()
+    
 #     context = {
 #         'title': 'Блог',
 #         'posts': posts
 #     }
+    
 #     return render(request, 'python_blog/blog.html', context)
+
 
 def post_detail(request, post_slug):
     post = Post.objects.get(slug=post_slug)
     context = {"title": post.title, "post": post}
     return render(request, "python_blog/post_detail.html", context)
-# def post_detail(request, post_slug):
-#     # Находим нужный пост по slug
-#     post = next((post for post in dataset if post['slug'] == post_slug), None)
-    
-#     context = {
-#         'title': post['title'],
-#         'post': post
-#     }
-#     return render(request, 'post_detail.html', context)
 
 def catalog_categories(request):
     CATEGORIES = Category.objects.all()
@@ -70,13 +118,16 @@ def catalog_categories(request):
 
 
 def category_detail(request, category_slug):
+    category = Category.objects.get(slug=category_slug)
+    posts = category.posts.all()
+    context = {
+        "category": category,
+        "posts": posts,
+        "title": f"Категория: {category.name}",
+        "active_menu": "categories",  # Добавляем флаг активного меню
+    }
+    return render(request, "python_blog/category_detail.html", context)
 
-    category = Category.objects.filter(slug=category_slug).first()
-    posts = Post.objects.filter(category=category)
-
-    return render(
-        request, "python_blog/category_detail.html", {"category": category, "posts": posts}
-    )
 
 
 def catalog_tags(request):
