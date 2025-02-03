@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Post, Category, Tag
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F
 from django.contrib.messages import constants as messages
 from django.contrib import messages
 from django.core.paginator import Paginator
