@@ -10,6 +10,7 @@ def menu_items(request):
     {"title": "Главная", "url_name": "main"},
     {"title": "О нас", "url_name": "about"},
     {"title": "Все посты", "url_name": "blog:posts"},
+    {"title": "Создать пост", "url_name": "blog:post_create"},
     {"title": "Категории", "url_name": "blog:categories"},
     {"title": "Теги", "url_name": "blog:tags"},
 ]
