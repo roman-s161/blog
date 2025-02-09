@@ -3,47 +3,46 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LogoutView, LoginView
 
+from django.views.generic.edit import CreateView
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.urls import reverse
+from .forms import LoginForm, RegisterForm
 
 
-def login_user(request):
-    """View функция для авторизации пользователя"""
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+    form_class = LoginForm
+    next_page = 'main'
+    
+    def form_valid(self, form):
+        messages.success(self.request, f'Добро пожаловать, {form.get_user().username}!')
+        return super().form_valid(form)
 
-    # Если пользователь уже авторизован - редиректим на главную
-    if request.user.is_authenticated:
-        return redirect("main")
-
-    # Если POST запрос - обрабатываем форму
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        # Пытаемся авторизовать пользователя
-        user = authenticate(request, username=username, password=password)
-
-        # Если пользователь найден
-        if user is not None:
-            # Авторизуем пользователя
-            login(request, user)
-            messages.success(request, f"Добро пожаловать, {user.username}!")
-            return redirect("main")
-        else:
-            # Если пользователь не найден - показываем ошибку
-            messages.error(request, "Неверное имя пользователя или пароль")
-
-    return render(request, "login.html")
+    def form_invalid(self, form):
+        messages.error(self.request, 'Неверное имя пользователя или пароль')
+        return super().form_invalid(form)
 
 
 class CustomLogoutView(LogoutView):
     template_name = 'logout.html'
     next_page = 'main'
 
+    def post(self, request, *args, **kwargs):
+        messages.success(request, 'Вы успешно вышли из системы')
+        return super().post(request, *args, **kwargs)
+
+
+class RegisterView(CreateView):
+    form_class = RegisterForm
+    template_name = 'register.html'
+    success_url = reverse_lazy('main')
 
 
 def register_user(request):

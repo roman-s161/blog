@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from .forms import PostForm, TagForm
 from django.contrib.auth.decorators import login_required, permission_required
 
+
 CATEGORIES = [
     {"slug": "python", "name": "Python"},
     {"slug": "django", "name": "Django"},
@@ -169,6 +170,7 @@ def post_create(request):
     }
     return render(request, 'python_blog/tag_form.html', context)
 
+@login_required
 def post_update(request, post_slug):
     post = Post.objects.get(slug=post_slug)
     if request.method == 'POST':
@@ -198,6 +200,7 @@ def catalog_categories(request):
     }
     return render(request, "python_blog/catalog_categories.html", context)
 
+@login_required
 def category_create(request):
     if request.method == "POST":
         name = request.POST.get("name")
@@ -218,6 +221,7 @@ def category_create(request):
     return render(request, "python_blog/category_create.html", context)
 
 
+@login_required
 def category_update(request, category_slug):
     # Получаем объект категории по slug
     category = Category.objects.get(slug=category_slug)
@@ -292,6 +296,7 @@ def tag_detail(request, tag_slug):
 
     return render(request, "python_blog/tag_detail.html", context)
 
+@login_required
 def tag_create(request):
     if request.method == 'POST':
         form = TagForm(request.POST)
