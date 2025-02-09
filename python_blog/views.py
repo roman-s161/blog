@@ -6,6 +6,7 @@ from django.contrib.messages import constants as messages
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .forms import PostForm, TagForm
+from django.contrib.auth.decorators import login_required, permission_required
 
 CATEGORIES = [
     {"slug": "python", "name": "Python"},
@@ -146,6 +147,7 @@ def post_detail(request, post_slug):
     context = {"title": post.title, "post": post}
     return render(request, "python_blog/post_detail.html", context)
 
+@permission_required('python_blog.add_post', raise_exception=True)
 def post_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
