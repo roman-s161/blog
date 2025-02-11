@@ -8,4 +8,5 @@ requests==2.32.3
 sqlparse==0.5.2
 urllib3==2.2.3
 unidecode==1.4.2
-django-debug-toolbar 5.0.1
+django-debug-toolbar== 5.0.1
+pillow==11.1.0
