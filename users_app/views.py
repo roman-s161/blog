@@ -1,20 +1,32 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
+"""
+View - базовая вью - можно определить методы get, post - и там определить логику обработки запросов
+ListView - списковое отображение
+DetailView - детальное отображение одного объекта
+CreateView - создание объекта (указываем, форму и шаблон)
+UpdateView - обновление объекта (указываем, форму и шаблон)
+DeleteView - удаление объекта (указываем, форму и шаблон)
+TemplateView - базовый класс для шаблонов
+"""
 from django.contrib import messages
-from django.urls import reverse
-from django.contrib.auth.models import User
 from django.contrib.auth.views import LogoutView, LoginView
-
 from django.views.generic.edit import CreateView
-from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import TemplateView
 from django.urls import reverse_lazy
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from django.urls import reverse
-from .forms import LoginForm, RegisterForm
 
+from .forms import LoginForm, RegisterForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView
+from django.contrib.auth import get_user_model
+
+class OwnerPermissionMixin:
+    """
+    Миксин для проверки прав доступа к профилю
+    """
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_owner'] = self.request.user == self.get_object()
+        return context
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
@@ -45,49 +57,18 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('main')
 
 
-# def register_user(request):
-#     """View функция для регистрации пользователя"""
-    
-#     # Если пользователь уже авторизован - редиректим на главную
-#     if request.user.is_authenticated:
-#         return redirect('main')
-    
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         email = request.POST.get('email')
-#         password1 = request.POST.get('password1')
-#         password2 = request.POST.get('password2')
-        
-#         # Проверяем совпадение паролей
-#         if password1 != password2:
-#             messages.error(request, 'Пароли не совпадают')
-#             return render(request, 'register.html')
-        
-#         # Проверяем существование пользователя
-#         if User.objects.filter(username=username).exists():
-#             messages.error(request, 'Пользователь с таким именем уже существует')
-#             return render(request, 'register.html')
-        
-#         # Проверяем существование email
-#         if User.objects.filter(email=email).exists():
-#             messages.error(request, 'Пользователь с таким email уже существует')
-#             return render(request, 'register.html')
-        
-#         # Создаем пользователя
-#         user = User.objects.create_user(
-#             username=username,
-#             email=email,
-#             password=password1
-#         )
-        
-#         # Авторизуем пользователя
-#         login(request, user)
-#         messages.success(request, f'Добро пожаловать, {user.username}!')
-#         return redirect('main')
-        
-#     return render(request, 'register.html')
 
 
+class ProfileDetailView(LoginRequiredMixin, OwnerPermissionMixin, DetailView):
+    model = get_user_model()
+    template_name = "profile_detail.html"
+    context_object_name = "profile_user"
 
-def profile_user(request):
-    pass
+# Классы заглушки ProfileEditView, ProfilePasswordView
+
+class ProfileEditView(LoginRequiredMixin, TemplateView):
+    template_name = "profile_base.html"
+
+
+class ProfilePasswordView(LoginRequiredMixin, TemplateView):
+    template_name = "profile_base.html"
