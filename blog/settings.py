@@ -163,4 +163,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'users_app.CustomUser'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #выводит письма в консоль
+
+# настройки почты
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.yandex.ru'
+# EMAIL_PORT = 465
+# EMAIL_HOST_USER = 'ad@ad.ru'
+# EMAIL_HOST_PASSWORD = 'банан'
+# EMAIL_USE_SSL = True
+# DEFAULT_FROM_EMAIL = 'ad@ad.ru'
+# SERVER_EMAIL = 'ad@ad.ru'
+# EMAIL_ADMIN = 'ad@ad.ru'
